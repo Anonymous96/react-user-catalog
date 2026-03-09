@@ -5,16 +5,10 @@ export interface User {
   email: string
   phone: string
   age: number
-  gender: string
+  gender: 'male' | 'female'
   image: string
-  company: {
-    name: string
-    department: string
-  }
-  address: {
-    city: string
-    country: string
-  }
+  company: Company
+  address: Address
 }
 
 export interface UsersResponse {
@@ -22,4 +16,14 @@ export interface UsersResponse {
   total: number
   skip: number
   limit: number
+}
+
+export interface Company {
+  name: string
+  department: string
+}
+
+export interface Address {
+  city: string
+  country: string
 }

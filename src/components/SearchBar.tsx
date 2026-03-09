@@ -11,7 +11,10 @@ export default function SearchBar({ value, onChange }: Props) {
 
   return (
     <div className="relative flex-1 max-w-md">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+      <Search
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        size={16}
+      />
       <input
         ref={inputRef}
         type="text"
@@ -23,7 +26,11 @@ export default function SearchBar({ value, onChange }: Props) {
       />
       {value && (
         <button
-          onClick={() => { onChange(''); inputRef.current?.focus() }}
+          type="button"
+          onClick={() => {
+            onChange('')
+            inputRef.current?.focus()
+          }}
           aria-label="Clear search"
           className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
         >

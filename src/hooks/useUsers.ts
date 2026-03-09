@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { User } from '../types/user'
-import { fetchUsers, PAGE_SIZE } from '../services/userService'
-
+import { fetchUsers } from '../services/userService'
+import { PAGE_SIZE } from '../config/api'
 
 interface UseUsersResult {
   users: User[]
@@ -16,18 +17,45 @@ interface UseUsersResult {
 }
 
 export function useUsers(): UseUsersResult {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const query = searchParams.get('q') ?? ''
+  const page = Number(searchParams.get('page') ?? '1')
+
   const [users, setUsers] = useState<User[]>([])
   const [total, setTotal] = useState(0)
-  const [page, setPage] = useState(1)
-  const [query, setQueryState] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [debouncedQuery, setDebouncedQuery] = useState(query)
   const abortRef = useRef<AbortController | null>(null)
 
-  const setQuery = (q: string) => {
-    setQueryState(q)
-    setPage(1)
-  }
+  const setQuery = useCallback(
+    (q: string) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev)
+        if (q) next.set('q', q)
+        else next.delete('q')
+        next.set('page', '1')
+        return next
+      })
+    },
+    [setSearchParams],
+  )
+
+  const setPage = useCallback(
+    (p: number) => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('page', String(p))
+        return next
+      })
+    },
+    [setSearchParams],
+  )
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query), 400)
+    return () => clearTimeout(id)
+  }, [query])
 
   useEffect(() => {
     abortRef.current?.abort()
@@ -37,7 +65,7 @@ export function useUsers(): UseUsersResult {
     setLoading(true)
     setError(null)
 
-    fetchUsers(query, page, controller.signal)
+    fetchUsers(debouncedQuery, page, controller.signal)
       .then((data) => {
         setUsers(data.users)
         setTotal(data.total)
@@ -50,9 +78,19 @@ export function useUsers(): UseUsersResult {
       })
 
     return () => controller.abort()
-  }, [page, query])
+  }, [page, debouncedQuery])
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
-  return { users, total, page, totalPages, loading, error, query, setQuery, setPage }
+  return {
+    users,
+    total,
+    page,
+    totalPages,
+    loading,
+    error,
+    query,
+    setQuery,
+    setPage,
+  }
 }

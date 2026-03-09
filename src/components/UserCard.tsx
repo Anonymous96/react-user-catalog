@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Mail, Phone, Building2, MapPin } from 'lucide-react'
 import type { User } from '../types/user'
 
@@ -7,13 +8,16 @@ interface Props {
 
 export default function UserCard({ user }: Props) {
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150">
-      {/* Header */}
+    <article className="h-72 bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150">
       <div className="flex items-center gap-3">
         <img
           src={user.image}
           alt={`${user.firstName} ${user.lastName}`}
           loading="lazy"
+          onError={(e) => {
+            ;(e.target as HTMLImageElement).src =
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(user.firstName + ' ' + user.lastName)}&background=e0e7ff&color=4f46e5`
+          }}
           className="w-14 h-14 rounded-full object-cover border-2 border-gray-100 shrink-0"
         />
         <div className="min-w-0">
@@ -29,18 +33,23 @@ export default function UserCard({ user }: Props) {
         </div>
       </div>
 
-      {/* Details */}
       <ul className="flex flex-col gap-2">
         <DetailRow icon={<Mail size={14} />} text={user.email} />
         <DetailRow icon={<Phone size={14} />} text={user.phone} />
-        <DetailRow icon={<Building2 size={14} />} text={`${user.company.name} — ${user.company.department}`} />
-        <DetailRow icon={<MapPin size={14} />} text={`${user.address.city}, ${user.address.country}`} />
+        <DetailRow
+          icon={<Building2 size={14} />}
+          text={`${user.company.name} — ${user.company.department}`}
+        />
+        <DetailRow
+          icon={<MapPin size={14} />}
+          text={`${user.address.city}, ${user.address.country}`}
+        />
       </ul>
     </article>
   )
 }
 
-function DetailRow({ icon, text }: { icon: React.ReactNode; text: string }) {
+function DetailRow({ icon, text }: { icon: ReactNode; text: string }) {
   return (
     <li className="flex items-start gap-2 text-sm text-gray-500">
       <span className="mt-0.5 shrink-0 text-indigo-500">{icon}</span>

@@ -1,7 +1,5 @@
 import type { UsersResponse } from '../types/user'
-
-const BASE_URL = 'https://dummyjson.com'
-export const PAGE_SIZE = 12
+import { BASE_URL, PAGE_SIZE } from '../config/api'
 
 export async function fetchUsers(
   query: string,
@@ -16,5 +14,7 @@ export async function fetchUsers(
 
   const res = await fetch(url, { signal })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json() as Promise<UsersResponse>
+  const data = (await res.json()) as UsersResponse
+  if (!Array.isArray(data.users)) throw new Error('Unexpected API response')
+  return data
 }
