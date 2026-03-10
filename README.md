@@ -54,6 +54,24 @@ npm run build
 npm run preview
 ```
 
+## Testing
+
+29 tests across 5 files using Vitest + React Testing Library.
+
+```bash
+npm test               # watch mode
+npm test -- --run      # single run
+npm run test:coverage  # with coverage report
+```
+
+| File | Tests |
+|---|---|
+| `userService.test.ts` | endpoint selection, pagination, name filtering, error handling |
+| `SearchBar.test.tsx` | rendering, typing, clear button |
+| `UserCard.test.tsx` | all user fields rendered correctly |
+| `EmptyState.test.tsx` | generic and query-specific messages |
+| `useUsers.test.tsx` | loading state, fetch success/error, URL params, totalPages |
+
 ## Code quality
 
 ```bash
