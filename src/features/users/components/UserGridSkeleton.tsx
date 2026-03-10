@@ -1,4 +1,4 @@
-import { PAGE_SIZE } from '../config/api'
+import { PAGE_SIZE } from '../../../config/api'
 
 interface Props {
   count?: number

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Mail, Phone, Building2, MapPin } from 'lucide-react'
-import type { User } from '../types/user'
+import type { User } from '../../../types/user'
 
 interface Props {
   user: User

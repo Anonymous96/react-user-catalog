@@ -1,5 +1,5 @@
-import type { UsersResponse } from '../types/user'
-import { BASE_URL, PAGE_SIZE } from '../config/api'
+import type { UsersResponse } from '../../../types/user'
+import { BASE_URL, PAGE_SIZE } from '../../../config/api'
 
 export async function fetchUsers(
   query: string,
@@ -16,5 +16,15 @@ export async function fetchUsers(
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const data = (await res.json()) as UsersResponse
   if (!Array.isArray(data.users)) throw new Error('Unexpected API response')
+
+  if (trimmed) {
+    const lower = trimmed.toLowerCase()
+    data.users = data.users.filter((u) => {
+      const full = `${u.firstName} ${u.lastName}`.toLowerCase()
+      return full.includes(lower)
+    })
+    data.total = data.users.length
+  }
+
   return data
 }

@@ -17,12 +17,16 @@ A user catalog built with React and TypeScript, powered by the [DummyJSON](https
 
 ```
 src/
-├── components/     # Reusable UI — UserCard, SearchBar, Pagination, Skeleton, EmptyState, ErrorBoundary
-├── config/         # Shared constants (BASE_URL, PAGE_SIZE)
-├── hooks/          # useUsers — data fetching, debounce, abort, URL sync
-├── pages/          # UsersPage — page-level layout and composition
-├── services/       # userService — API layer
-└── types/          # TypeScript interfaces
+├── features/
+│   └── users/
+│       ├── components/   # UserCard, UserGridSkeleton, EmptyState
+│       ├── hooks/        # useUsers — data fetching, debounce, abort, URL sync
+│       └── services/     # userService — API layer
+├── layout/               # Header with navigation
+├── components/           # Shared UI — SearchBar, Pagination, ErrorBoundary
+├── pages/                # UsersPage — page-level layout and composition
+├── config/               # Shared constants (BASE_URL, PAGE_SIZE)
+└── types/                # TypeScript interfaces
 ```
 
 ## Tech stack

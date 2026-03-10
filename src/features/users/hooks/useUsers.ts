@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import type { User } from '../types/user'
+import type { User } from '../../../types/user'
 import { fetchUsers } from '../services/userService'
-import { PAGE_SIZE } from '../config/api'
+import { PAGE_SIZE } from '../../../config/api'
 
 interface UseUsersResult {
   users: User[]
@@ -26,7 +26,6 @@ export function useUsers(): UseUsersResult {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [debouncedQuery, setDebouncedQuery] = useState(query)
-  const abortRef = useRef<AbortController | null>(null)
 
   const setQuery = useCallback(
     (q: string) => {
@@ -58,9 +57,7 @@ export function useUsers(): UseUsersResult {
   }, [query])
 
   useEffect(() => {
-    abortRef.current?.abort()
     const controller = new AbortController()
-    abortRef.current = controller
 
     setLoading(true)
     setError(null)
